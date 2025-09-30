@@ -1,0 +1,40 @@
+{
+  "name": "taskmaster-pwa",
+  "version": "1.0.0",
+  "description": "Progressive Web App con arquitectura App Shell para gestión de tareas",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 3000 -c-1",
+    "start:https": "http-server -p 8443 -S -C cert.pem -K key.pem",
+    "build": "echo 'No build process needed for this static PWA'",
+    "test": "lighthouse http://localhost:3000 --view",
+    "audit": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
+    "generate-icons": "echo 'Use: https://realfavicongenerator.net/ to generate icons'",
+    "validate": "node scripts/validate-pwa.js"
+  },
+  "keywords": [
+    "pwa",
+    "progressive-web-app",
+    "app-shell",
+    "service-worker",
+    "offline-first",
+    "task-manager"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "lighthouse": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/taskmaster-pwa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tu-usuario/taskmaster-pwa/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/taskmaster-pwa#readme"
+}

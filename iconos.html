@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Íconos - TaskMaster PWA</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #0a0a0a;
+      font-family: 'Arial', sans-serif;
+      color: #22c55e;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #22c55e;
+      text-shadow: 0 0 10px #22c55e;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #16a34a;
+      margin-bottom: 40px;
+      font-size: 1.2em;
+    }
+
+    .controls {
+      background: #111;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: #22c55e;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      border: 2px solid #16a34a;
+      border-radius: 8px;
+      color: #22c55e;
+      font-size: 16px;
+      font-family: 'Courier New', monospace;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+
+    .icons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .icon-preview {
+      background: #111;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+
+    .icon-size-label {
+      color: #22c55e;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
+
+    .icon-canvas-container {
+      background: #000;
+      border: 2px solid #16a34a;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+
+    canvas {
+      border-radius: 8px;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .download-btn {
+      width: 100%;
+      padding: 10px;
+      background: #22c55e;
+      color: #000;
+      border: 2px solid #16a34a;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9em;
+    }
+
+    .download-btn:hover {
+      background: #16a34a;
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.8);
+    }
+
+    .download-all {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #22c55e;
+      color: #000;
+      border: 3px solid #16a34a;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.3em;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+      transition: all 0.3s;
+    }
+
+    .download-all:hover {
+      background: #16a34a;
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(34, 197, 94, 0.9);
+    }
+
+    .instructions {
+      background: #111;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 40px;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+
+    .instructions h3 {
+      color: #22c55e;
+      text-shadow: 0 0 10px #22c55e;
+      margin-top: 0;
+    }
+
+    .instructions ol {
+      color: #16a34a;
+      line-height: 2;
+    }
+
+    .note {
+      background: #0f3d2a;
+      border-left: 4px solid #22c55e;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 4px;
+      color: #22c55e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 GENERADOR DE ÍCONOS</h1>
+    <p class="subtitle">Crea tus íconos PWA instantáneamente</p>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="design">📐 Selecciona el Diseño:</label>
+        <select id="design" onchange="updateIcons()">
+          <option value="checkmark">✓ Checkmark Gigante (RECOMENDADO)</option>
+          <option value="tm">TM - Letras TaskMaster</option>
+          <option value="list">☑ Lista de Tareas</option>
+          <option value="circle">⭕ Círculo con Check</option>
+          <option value="square">⬛ Cuadrado Minimalista</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="text">✏️ Personalizar Texto (solo para TM):</label>
+        <input type="text" id="text" value="TM" maxlength="3" oninput="updateIcons()">
+      </div>
+    </div>
+
+    <div class="icons-grid" id="iconsGrid"></div>
+
+    <button class="download-all" onclick="downloadAll()">
+      📥 DESCARGAR TODOS LOS ÍCONOS (ZIP)
+    </button>
+
+    <div class="instructions">
+      <h3>📝 Instrucciones de Uso</h3>
+      <ol>
+        <li><strong>Selecciona un diseño</strong> del menú desplegable arriba</li>
+        <li><strong>Personaliza el texto</strong> si elegiste "TM" (opcional)</li>
+        <li><strong>Descarga los íconos</strong>:
+          <ul>
+            <li>Opción 1: Click en "Descargar" en cada ícono individual</li>
+            <li>Opción 2: Click en "DESCARGAR TODOS" para obtener un ZIP</li>
+          </ul>
+        </li>
+        <li><strong>Guarda los archivos</strong> en tu carpeta <code>/icons/</code></li>
+        <li><strong>Verifica los nombres</strong>: deben ser <code>icon-72.png</code>, <code>icon-192.png</code>, etc.</li>
+      </ol>
+
+      <div class="note">
+        <strong>⚠️ IMPORTANTE:</strong> Los íconos se generan con los nombres correctos automáticamente.
+        Solo guárdalos en la carpeta <code>/icons/</code> de tu proyecto.
+      </div>
+
+      <div class="note" style="margin-top: 15px; background: #1a1a1a;">
+        <strong>✅ VERIFICACIÓN:</strong> Después de descargar, deberías tener estos archivos:<br>
+        <code>icon-72.png</code>, <code>icon-96.png</code>, <code>icon-128.png</code>, 
+        <code>icon-144.png</code>, <code>icon-152.png</code>, <code>icon-192.png</code>, 
+        <code>icon-384.png</code>, <code>icon-512.png</code>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script>
+    const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+    const canvases = {};
+
+    function createCanvas(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      return canvas;
+    }
+
+    function drawCheckmark(ctx, size) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, size, size);
+
+      // Checkmark con resplandor
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = size * 0.1;
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = size * 0.15;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(size * 0.2, size * 0.5);
+      ctx.lineTo(size * 0.4, size * 0.7);
+      ctx.lineTo(size * 0.8, size * 0.3);
+      ctx.stroke();
+    }
+
+    function drawTM(ctx, size, text) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = size * 0.05;
+      ctx.fillStyle = '#22c55e';
+      ctx.font = `bold ${size * 0.5}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, size / 2, size / 2);
+    }
+
+    function drawList(ctx, size) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = size * 0.03;
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = size * 0.06;
+      ctx.lineCap = 'round';
+
+      const itemHeight = size * 0.2;
+      const startY = size * 0.25;
+      const checkSize = size * 0.1;
+      const textStart = size * 0.3;
+
+      for (let i = 0; i < 3; i++) {
+        const y = startY + i * itemHeight;
+        
+        // Checkbox
+        ctx.strokeRect(size * 0.15, y, checkSize, checkSize);
+        
+        // Checkmark en el segundo
+        if (i === 1) {
+          ctx.beginPath();
+          ctx.moveTo(size * 0.16, y + checkSize * 0.5);
+          ctx.lineTo(size * 0.19, y + checkSize * 0.7);
+          ctx.lineTo(size * 0.24, y + checkSize * 0.3);
+          ctx.stroke();
+        }
+        
+        // Línea de texto
+        ctx.beginPath();
+        ctx.moveTo(textStart, y + checkSize / 2);
+        ctx.lineTo(size * 0.85, y + checkSize / 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawCircle(ctx, size) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = size * 0.08;
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = size * 0.08;
+
+      // Círculo
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size * 0.35, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Checkmark
+      ctx.lineWidth = size * 0.1;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(size * 0.35, size * 0.5);
+      ctx.lineTo(size * 0.45, size * 0.6);
+      ctx.lineTo(size * 0.65, size * 0.4);
+      ctx.stroke();
+    }
+
+    function drawSquare(ctx, size) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = size * 0.1;
+      ctx.fillStyle = '#22c55e';
+      
+      const squareSize = size * 0.5;
+      const x = (size - squareSize) / 2;
+      const y = (size - squareSize) / 2;
+      
+      ctx.fillRect(x, y, squareSize, squareSize);
+    }
+
+    function updateIcons() {
+      const design = document.getElementById('design').value;
+      const text = document.getElementById('text').value || 'TM';
+      const grid = document.getElementById('iconsGrid');
+      grid.innerHTML = '';
+
+      sizes.forEach(size => {
+        const canvas = createCanvas(size);
+        const ctx = canvas.getContext('2d');
+
+        switch(design) {
+          case 'checkmark':
+            drawCheckmark(ctx, size);
+            break;
+          case 'tm':
+            drawTM(ctx, size, text);
+            break;
+          case 'list':
+            drawList(ctx, size);
+            break;
+          case 'circle':
+            drawCircle(ctx, size);
+            break;
+          case 'square':
+            drawSquare(ctx, size);
+            break;
+        }
+
+        canvases[size] = canvas;
+
+        const preview = document.createElement('div');
+        preview.className = 'icon-preview';
+        preview.innerHTML = `
+          <div class="icon-size-label">${size}x${size}px</div>
+          <div class="icon-canvas-container">
+            ${canvas.outerHTML}
+          </div>
+          <button class="download-btn" onclick="downloadIcon(${size})">
+            📥 Descargar icon-${size}.png
+          </button>
+        `;
+        grid.appendChild(preview);
+      });
+    }
+
+    function downloadIcon(size) {
+      const canvas = canvases[size];
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `icon-${size}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    async function downloadAll() {
+      const zip = new JSZip();
+      const iconsFolder = zip.folder('icons');
+
+      for (const size of sizes) {
+        const canvas = canvases[size];
+        const blob = await new Promise(resolve => canvas.toBlob(resolve));
+        iconsFolder.file(`icon-${size}.png`, blob);
+      }
+
+      const content = await zip.generateAsync({type: 'blob'});
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'taskmaster-icons.zip';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Inicializar
+    updateIcons();
+  </script>
+</body>
+</html>
