@@ -838,38 +838,5 @@ copies or substantial portions of the Software.
 
 ---
 
-## 📞 Soporte
-
-### ¿Necesitas ayuda?
-
-- 📧 **Email:** tu-email@ejemplo.com
-- 🐛 **Issues:** [GitHub Issues](https://github.com/tu-usuario/taskmaster-pwa/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/tu-usuario/taskmaster-pwa/discussions)
-
----
-
-## 🎉 Agradecimientos
-
-- **Anthropic** por Claude AI
-- **Google** por las guías de PWA
-- **Mozilla** por MDN docs
-- **Render** por hosting gratuito
-- **Comunidad Open Source**
-
----
-
-<div align="center">
-
-**Desarrollado con ❤️ como ejemplo de PWA profesional**
-
-**Tema Cyberpunk: Negro y Verde Neón 🟢⚫**
-
-⭐ Si te fue útil, dale una estrella en GitHub ⭐
-
-[Ver Demo](https://taskmaster-pwa.onrender.com) • 
-[Reportar Bug](https://github.com/tu-usuario/taskmaster-pwa/issues) • 
-[Documentación](https://github.com/tu-usuario/taskmaster-pwa/wiki)
-
-**Versión:** 1.0.0 | **Estado:** ✅ Producción Ready
 
 </div>
